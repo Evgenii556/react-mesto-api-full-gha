@@ -1,0 +1,23 @@
+.popup__alert{
+  display: flex;
+  color: #000000;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  max-width: 358px;
+  text-align: center;
+  margin-top: 32px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 23px;
+}
+
+@media screen and (max-width: 600px){
+  .popup__alert{
+    font-size: 18px;
+    line-height: 22px;
+    margin-left: 22px;
+    margin-top: 25px;
+    margin-bottom: 75px;
+  }
+}

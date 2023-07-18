@@ -1,0 +1,10 @@
+.header__account_exit {
+   font-weight: 400;
+   color: #A9A9A9;
+   cursor: pointer;
+   margin-left: 24px;
+}
+
+.header__account_exit:hover{
+    opacity: 0.6;
+  }
