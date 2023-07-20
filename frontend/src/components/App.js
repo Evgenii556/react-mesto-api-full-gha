@@ -133,7 +133,9 @@ function App() {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate('/');
-        localStorage.setItem('token', res.token);
+        localStorage.setItem('token', res._id);
+        api._headers['authorization'] = res._id;
+        console.log(api._headers)
       })
       .catch((err) =>{ 
         setIsAuthOk(false);

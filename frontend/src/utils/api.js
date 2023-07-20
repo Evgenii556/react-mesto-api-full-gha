@@ -105,9 +105,9 @@ class Api {
 const api = new Api({
   baseUrl: 'https://api.superproject.mesto.nomoredomains.xyz',
   headers: {
+    'authorization': '',
     'Content-Type': 'application/json'
   }
 });
 
 export default api;
-
