@@ -37,12 +37,13 @@ function App() {
   const checkToken = () => {
     const token = localStorage.getItem('token')
     if (token) {
+      setApiToken(token);
       auth.checkToken(token)
         .then((res) => {
           if (res) {
             setIsLoggedIn(true);
             navigate('/');
-            setUserEmail(res.data.email);
+            setUserEmail(res.email);
           } else {
             setIsLoggedIn(false);
           }
@@ -51,23 +52,28 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    checkToken();
-  }, []);
+  const setApiToken = (token) => {
+    api._headers['authorization'] = `Bearer ${token}`
+  }
 
   useEffect(() => {
-    if (isLoggedIn) {
-      Promise.all([api.getUserInfo(), api.getCards()])
-        .then(([user, cards]) => {
+    checkToken()
+    const token = localStorage.getItem('token');
+    if (token) {
+      Promise.all([api.getUserInfo(),  api.getCards() ])
+        .then(([user , cards ]) => {
           setCurrentUser(user);
-          setCards(cards);
+          setCards(cards.reverse());
         })
         .catch((err) => console.log(err));
     }
-  }, [isLoggedIn]);
+  },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isLoggedIn]);
+
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
     api.changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -118,7 +124,7 @@ function App() {
       .then(() => {
         setIsAuthOk(true);
         setIsLoggedIn(true);
-        navigate('/sing-in');
+        navigate('/sign-in');
       })
       .catch((err) => {
         setIsAuthOk(false);
@@ -134,10 +140,9 @@ function App() {
         setUserEmail(email);
         navigate('/');
         localStorage.setItem('token', res._id);
-        api._headers['authorization'] = res._id;
-        console.log(api._headers)
+
       })
-      .catch((err) =>{ 
+      .catch((err) => {
         setIsAuthOk(false);
         setIsInfoToolTipOpened(true);
         console.log(err);
@@ -186,81 +191,82 @@ function App() {
       }
     }
 
-    if(handlePopup) {
+    if (handlePopup) {
       document.addEventListener('mousedown', handleOverlayClick);
 
       document.addEventListener('keydown', handleEscapeKey);
-      
+
       return () => {
         document.removeEventListener('mousedown', handleOverlayClick);
-        document.removeEventListener('keydown', handleEscapeKey)};
+        document.removeEventListener('keydown', handleEscapeKey)
+      };
     }
-    
+
   }, [handlePopup]);
-  
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-    <div className="page">
-    <Header userEmail={userEmail} handleSingOut={handleSingOut} />
-    <Routes>
-      <Route path="/sing-up" element={
-        <div>
-          <Register handleRegister={handleRegister}/>
-        </div>
-      }/>
-      <Route path="/sing-in" element={
-        <div>
-          <Login handleAuthorize={handleAuthorize}/>
-        </div>
-      }/>
-      <Route path="*" element={<Navigate to='/sing-up' />}/>
-      <Route path="/" element={
-        <ProtectedRoute
-          element={
-            <Main
-              cards={cards}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}/>
-          } isLoggedIn={isLoggedIn}/>
-      }/>
-    </Routes>
+      <div className="page">
+        <Header userEmail={userEmail} handleSingOut={handleSingOut} />
+        <Routes>
+          <Route path="/sign-up" element={
+            <div>
+              <Register handleRegister={handleRegister} />
+            </div>
+          } />
+          <Route path="/sign-in" element={
+            <div>
+              <Login handleAuthorize={handleAuthorize} />
+            </div>
+          } />
+          <Route path="*" element={<Navigate to='/sing-up' />} />
+          <Route path="/" element={
+            <ProtectedRoute
+              element={
+                <Main
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete} />
+              } isLoggedIn={isLoggedIn} />
+          } />
+        </Routes>
 
-    <Footer />
+        <Footer />
 
-    <EditProfilePopup
-      isOpen={isEditProfilePopupOpen}
-      onClose={closeAllPopups}
-      onUpdateUser={handleUpdateUser}
-    />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
 
-    <EditAvatarPopup
-      isOpen={isEditAvatarPopupOpen}
-      onClose={closeAllPopups}
-      onUpdateAvatar={handleUpdateAvatar}
-    />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
-    <AddPlacePopup
-      isOpen={isAddPlacePopupOpen}
-      onClose={closeAllPopups}
-      onAddPlace={handleAddCard}
-    />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddCard}
+        />
 
-    <ImagePopup
-      card={selectedCard}
-      onClose={closeAllPopups}
-    ></ImagePopup>
+        <ImagePopup
+          card={selectedCard}
+          onClose={closeAllPopups}
+        ></ImagePopup>
 
-    <InfoTooltip
-      isOpen={isInfoToolTipOpened}
-      onClose={closeAllPopups}
-      isAuthOk={isAuthOk}
-    />
+        <InfoTooltip
+          isOpen={isInfoToolTipOpened}
+          onClose={closeAllPopups}
+          isAuthOk={isAuthOk}
+        />
 
-    </div>
+      </div>
     </CurrentUserContext.Provider>
   );
 }

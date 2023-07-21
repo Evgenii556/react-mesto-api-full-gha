@@ -7,8 +7,8 @@ function Header({ userEmail, handleSingOut}) {
         <header className="header">
             <img className="header__logo" src={headerLogo} alt="MESTO"/>
             <Routes>
-                <Route path='/sing-in' element={<Link to='/sing-up' className="header__link">Регистрация</Link>}/>
-                <Route path='/sing-up' element={<Link to='/sing-in' className="header__link">Войти</Link>}/>
+                <Route path='/sign-in' element={<Link to='/sign-up' className="header__link">Регистрация</Link>}/>
+                <Route path='/sign-up' element={<Link to='/sign-in' className="header__link">Войти</Link>}/>
                 <Route path='/' 
                     element={
                         <div className="header__container">

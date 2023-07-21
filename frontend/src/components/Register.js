@@ -25,7 +25,7 @@ function Register({ handleRegister }) {
                 <input className="auth__input auth__input_email" id="data-email-input" name="email" type="email" required minLength="2" maxLength="40" placeholder="Email" onChange={handleChange} value={userData.email}/>
                 <input className="auth__input auth__input_password" id='data-password-input' type="password" name="password" required minLength="2" maxLength="200" placeholder="Пароль" autoComplete="on" onChange={handleChange} value={userData.password}/>
                 <button className="auth__button" type="submit">Зарегистироваться</button>
-                <Link to='/sing-in' className="auth__link">Уже зарегистрированы? Войти</Link>
+                <Link to='/sign-in' className="auth__link">Уже зарегистрированы? Войти</Link>
             </form>
         </div>
     );
