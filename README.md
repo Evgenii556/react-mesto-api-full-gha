@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.16.27
+IP 51.250.16.27
 
 Frontend https://superproject.mesto.nomoredomains.xyz
 
